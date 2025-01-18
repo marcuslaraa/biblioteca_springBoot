@@ -1,0 +1,44 @@
+package com.example.biblioteca.dao;
+
+import com.example.biblioteca.model.Book;
+import org.springframework.stereotype.Repository;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
+import java.util.List;
+
+@Repository
+public class BookDAO {
+
+  @PersistenceContext
+  private EntityManager entityManager;
+
+  @Transactional
+  public void create(Book book) {
+    entityManager.persist(book);
+  }
+
+  @Transactional
+  public Book findById(Long id) {
+    return entityManager.find(Book.class, id);
+  }
+
+  @Transactional
+  public List<Book> findAll() {
+    return entityManager.createQuery("from Book", Book.class).getResultList();
+  }
+
+  @Transactional
+  public void update(Book book) {
+    entityManager.merge(book);
+  }
+
+  @Transactional
+  public void delete(Long id) {
+    Book book = entityManager.find(Book.class, id);
+    if (book != null) {
+      entityManager.remove(book);
+    }
+  }
+}
