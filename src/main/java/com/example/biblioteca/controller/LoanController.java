@@ -25,7 +25,6 @@ public class LoanController {
   public CompletableFuture<ResponseEntity<?>> createLoan(@RequestBody Loan loan) {
     return CompletableFuture.supplyAsync(() -> {
       try {
-        System.out.println(loan);
         loanService.createLoan(loan);
         logger.info("Emprestimo criado com sucesso");
         return ResponseEntity.ok(loan);

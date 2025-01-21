@@ -17,21 +17,18 @@ import java.util.concurrent.CompletableFuture;
 public class BookController {
 
   @Autowired
-  private BookDAO bookDAO;
-  private final BookService bookService = new BookService(bookDAO);
+  private BookService bookService;
 
   // [Post] create
   @PostMapping
   public CompletableFuture<ResponseEntity<?>> createBook(@RequestBody Book book) {
     return CompletableFuture.supplyAsync(() -> {
       try {
-        bookDAO.create(book);
-        // return this.bookService.createBook(book).thenApply(createdBook -> {
-        // return ResponseEntity.ok(createdBook);
-        // }).join();
+        bookService.createBook(book);
         return ResponseEntity.ok(book);
       } catch (Exception e) {
-        ErrorResponse errorResponse = new ErrorResponse(500, "Internal Server Error", "Erro ao criar o livro");
+        System.out.println(e);
+        ErrorResponse errorResponse = new ErrorResponse(400, "Bad Request", e.getMessage());
         return ResponseEntity.status(500).body(errorResponse);
       }
     });
@@ -42,14 +39,10 @@ public class BookController {
   public CompletableFuture<ResponseEntity<?>> getAllBooks() {
     return CompletableFuture.supplyAsync(() -> {
       try {
-        List<Book> books = bookDAO.findAll();
-        if (books.isEmpty()) {
-          ErrorResponse errorResponse = new ErrorResponse(404, "Not Found", "Não existem livros cadastrados");
-          return ResponseEntity.status(404).body(errorResponse);
-        }
+        List<Book> books = bookService.findAllBooks();
         return ResponseEntity.ok(books);
       } catch (Exception e) {
-        ErrorResponse errorResponse = new ErrorResponse(500, "Internal Server Error", "Erro ao buscar os livros");
+        ErrorResponse errorResponse = new ErrorResponse(404, "NOT_FOUND", e.getMessage());
         return ResponseEntity.status(500).body(errorResponse);
       }
     });
@@ -60,16 +53,11 @@ public class BookController {
   public CompletableFuture<ResponseEntity<?>> getBookById(@PathVariable Long id) {
     return CompletableFuture.supplyAsync(() -> {
       try {
-        Book book = bookDAO.findById(id);
-        if (book != null) {
-          return ResponseEntity.ok(book);
-        } else {
-          ErrorResponse errorResponse = new ErrorResponse(404, "Not Found", "O livro não existe");
-          return ResponseEntity.status(404).body(errorResponse);
-        }
+        Book foundedBook = bookService.findBookById(id);
+        return ResponseEntity.ok(foundedBook);
       } catch (Exception e) {
-        ErrorResponse errorResponse = new ErrorResponse(500, "Internal Server Error", "Erro ao buscar o livro");
-        return ResponseEntity.status(500).body(errorResponse);
+        ErrorResponse errorResponse = new ErrorResponse(404, "NOT_FOUND", e.getMessage());
+        return ResponseEntity.status(404).body(errorResponse);
       }
     });
   }
@@ -79,18 +67,12 @@ public class BookController {
   public CompletableFuture<ResponseEntity<?>> updateBook(@PathVariable Long id, @RequestBody Book bookDetails) {
     return CompletableFuture.supplyAsync(() -> {
       try {
-        Book book = bookDAO.findById(id);
-        if (book == null) {
-          ErrorResponse errorResponse = new ErrorResponse(404, "Not Found", "O livro não existe");
-          return ResponseEntity.status(404).body(errorResponse);
-        }
-        book.setTitle(bookDetails.getTitle());
-        book.setAuthor(bookDetails.getAuthor());
-        bookDAO.update(book);
-        return ResponseEntity.ok(book);
+
+        bookService.updateBook(id, bookDetails);
+        return ResponseEntity.ok("Livro atualizado com sucesso");
       } catch (Exception e) {
-        ErrorResponse errorResponse = new ErrorResponse(500, "Internal Server Error", "Erro ao atualizar o livro");
-        return ResponseEntity.status(500).body(errorResponse);
+        ErrorResponse errorResponse = new ErrorResponse(400, "Bad Request", e.getMessage());
+        return ResponseEntity.status(400).body(errorResponse);
       }
     });
   }
@@ -100,16 +82,11 @@ public class BookController {
   public CompletableFuture<ResponseEntity<?>> deleteBook(@PathVariable Long id) {
     return CompletableFuture.supplyAsync(() -> {
       try {
-        Book book = bookDAO.findById(id);
-        if (book == null) {
-          ErrorResponse errorResponse = new ErrorResponse(404, "Not Found", "O livro não existe");
-          return ResponseEntity.status(404).body(errorResponse);
-        }
-        bookDAO.delete(id);
+        bookService.deleteBook(id);
         return ResponseEntity.ok("Livro deletado com sucesso");
       } catch (Exception e) {
-        ErrorResponse errorResponse = new ErrorResponse(500, "Internal Server Error", "Erro ao deletar o livro");
-        return ResponseEntity.status(500).body(errorResponse);
+        ErrorResponse errorResponse = new ErrorResponse(404, "NOT_FOUND", e.getMessage());
+        return ResponseEntity.status(404).body(errorResponse);
       }
     });
   }

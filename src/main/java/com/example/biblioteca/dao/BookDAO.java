@@ -17,7 +17,6 @@ public class BookDAO {
 
   @Transactional
   public void create(Book book) {
-    System.out.println("DAO: criando o livro");
     entityManager.persist(book);
   }
 
