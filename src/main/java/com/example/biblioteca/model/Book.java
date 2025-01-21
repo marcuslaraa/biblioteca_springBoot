@@ -22,7 +22,6 @@ public class Book {
   private String isbn;
 
   @ManyToMany(mappedBy = "books", fetch = FetchType.EAGER)
-  private Set<Loan> loans = new HashSet<>();
 
   public Long getId() {
     return id;
@@ -56,14 +55,6 @@ public class Book {
     this.isbn = isbn;
   }
 
-  public Set<Loan> getLoans() {
-    return loans;
-  }
-
-  public void setLoans(Set<Loan> loans) {
-    this.loans = loans;
-  }
-
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
@@ -72,7 +63,6 @@ public class Book {
     sb.append(", title='").append(title).append('\'');
     sb.append(", author='").append(author).append('\'');
     sb.append(", isbn='").append(isbn).append('\'');
-    sb.append(", loans=").append(loans);
     sb.append('}');
     return sb.toString();
   }

@@ -20,13 +20,10 @@ public class LoanService {
   @Transactional
   public void createLoan(Loan loan) {
     Set<Book> books = loan.getBooks();
-    if (books != null) {
-      for (Book book : books) {
-        if (book.getLoans() == null) {
-          book.setLoans(new HashSet<>());
-        }
-        book.getLoans().add(loan);
-      }
+    System.out.println(books);
+    System.out.println(loan);
+    if (books == null) {
+      throw new IllegalArgumentException("Books cannot be null");
     }
     loanDAO.create(loan);
   }
