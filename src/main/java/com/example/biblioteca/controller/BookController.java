@@ -1,6 +1,5 @@
 package com.example.biblioteca.controller;
 
-import com.example.biblioteca.dao.BookDAO;
 import com.example.biblioteca.model.Book;
 import com.example.biblioteca.model.ErrorResponse;
 import com.example.biblioteca.service.BookService;
@@ -11,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import com.example.biblioteca.ErrorType;
 
 @RestController
 @RequestMapping("/books")
@@ -28,7 +28,7 @@ public class BookController {
         return ResponseEntity.ok(book);
       } catch (Exception e) {
         System.out.println(e);
-        ErrorResponse errorResponse = new ErrorResponse(400, "Bad Request", e.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse(ErrorType.BAD_REQUEST, e.getMessage());
         return ResponseEntity.status(500).body(errorResponse);
       }
     });
@@ -42,7 +42,7 @@ public class BookController {
         List<Book> books = bookService.findAllBooks();
         return ResponseEntity.ok(books);
       } catch (Exception e) {
-        ErrorResponse errorResponse = new ErrorResponse(404, "NOT_FOUND", e.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse(ErrorType.BAD_REQUEST, e.getMessage());
         return ResponseEntity.status(500).body(errorResponse);
       }
     });
@@ -56,7 +56,7 @@ public class BookController {
         Book foundedBook = bookService.findBookById(id);
         return ResponseEntity.ok(foundedBook);
       } catch (Exception e) {
-        ErrorResponse errorResponse = new ErrorResponse(404, "NOT_FOUND", e.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse(ErrorType.NOT_FOUND, e.getMessage());
         return ResponseEntity.status(404).body(errorResponse);
       }
     });
@@ -71,7 +71,7 @@ public class BookController {
         bookService.updateBook(id, bookDetails);
         return ResponseEntity.ok("Livro atualizado com sucesso");
       } catch (Exception e) {
-        ErrorResponse errorResponse = new ErrorResponse(400, "Bad Request", e.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse(ErrorType.BAD_REQUEST, e.getMessage());
         return ResponseEntity.status(400).body(errorResponse);
       }
     });
@@ -85,7 +85,7 @@ public class BookController {
         bookService.deleteBook(id);
         return ResponseEntity.ok("Livro deletado com sucesso");
       } catch (Exception e) {
-        ErrorResponse errorResponse = new ErrorResponse(404, "NOT_FOUND", e.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse(ErrorType.NOT_FOUND, e.getMessage());
         return ResponseEntity.status(404).body(errorResponse);
       }
     });

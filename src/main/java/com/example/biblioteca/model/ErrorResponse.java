@@ -1,13 +1,15 @@
 package com.example.biblioteca.model;
 
+import com.example.biblioteca.ErrorType;
+
 public class ErrorResponse {
   private int statusCode;
   private String error;
   private String message;
 
-  public ErrorResponse(int statusCode, String error, String message) {
-    this.statusCode = statusCode;
-    this.error = error;
+  public ErrorResponse(ErrorType errorType, String message) {
+    this.statusCode = errorType.getStatusCode();
+    this.error = errorType.getMessage();
     this.message = message;
   }
 

@@ -25,7 +25,7 @@ public class LoanDAO {
 
   @Transactional
   public List<Loan> findAll() {
-    return entityManager.createQuery("from loans", Loan.class).getResultList();
+    return entityManager.createQuery("from Loan", Loan.class).getResultList();
   }
 
   @Transactional
