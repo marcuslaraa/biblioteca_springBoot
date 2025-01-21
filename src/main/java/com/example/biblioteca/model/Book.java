@@ -1,11 +1,8 @@
 package com.example.biblioteca.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "books")
@@ -23,6 +20,9 @@ public class Book {
 
   @Column(unique = true, nullable = false)
   private String isbn;
+
+  @ManyToMany(mappedBy = "books", fetch = FetchType.EAGER)
+  private Set<Loan> loans = new HashSet<>();
 
   public Long getId() {
     return id;
@@ -56,17 +56,24 @@ public class Book {
     this.isbn = isbn;
   }
 
+  public Set<Loan> getLoans() {
+    return loans;
+  }
+
+  public void setLoans(Set<Loan> loans) {
+    this.loans = loans;
+  }
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-
-    sb.append("Livro{");
+    sb.append("Book{");
     sb.append("id=").append(id);
-    sb.append(", título='").append(title).append('\'');
-    sb.append(", autor='").append(author).append('\'');
+    sb.append(", title='").append(title).append('\'');
+    sb.append(", author='").append(author).append('\'');
     sb.append(", isbn='").append(isbn).append('\'');
+    sb.append(", loans=").append(loans);
     sb.append('}');
     return sb.toString();
   }
-
 }

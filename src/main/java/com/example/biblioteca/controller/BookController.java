@@ -3,25 +3,22 @@ package com.example.biblioteca.controller;
 import com.example.biblioteca.dao.BookDAO;
 import com.example.biblioteca.model.Book;
 import com.example.biblioteca.model.ErrorResponse;
+import com.example.biblioteca.service.BookService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/books")
 public class BookController {
 
-  private static final Logger logger = LoggerFactory.getLogger(BookController.class);
-
   @Autowired
   private BookDAO bookDAO;
+  private final BookService bookService = new BookService(bookDAO);
 
   // [Post] create
   @PostMapping
@@ -29,11 +26,10 @@ public class BookController {
     return CompletableFuture.supplyAsync(() -> {
       try {
         bookDAO.create(book);
+        // return this.bookService.createBook(book).thenApply(createdBook -> {
+        // return ResponseEntity.ok(createdBook);
+        // }).join();
         return ResponseEntity.ok(book);
-      } catch (DataIntegrityViolationException e) {
-        ErrorResponse errorResponse = new ErrorResponse(409, "Conflict",
-            "Já existe um livro com esse ISBN: " + book.getIsbn());
-        return ResponseEntity.status(409).body(errorResponse);
       } catch (Exception e) {
         ErrorResponse errorResponse = new ErrorResponse(500, "Internal Server Error", "Erro ao criar o livro");
         return ResponseEntity.status(500).body(errorResponse);
