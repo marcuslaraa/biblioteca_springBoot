@@ -27,7 +27,7 @@ public class LoanController {
       try {
         System.out.println(loan);
         loanService.createLoan(loan);
-        logger.info("Loan created successfully: {}", loan);
+        logger.info("Emprestimo criado com sucesso");
         return ResponseEntity.ok(loan);
       } catch (Exception e) {
         logger.error("Error creating loan", e);

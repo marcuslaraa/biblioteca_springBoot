@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.Set;
 
 @Entity
-@Table(name = "emprestimos")
+@Table(name = "loans")
 public class Loan {
 
   @Id
@@ -23,7 +23,7 @@ public class Loan {
   @Temporal(TemporalType.TIMESTAMP)
   private Date returnDate;
 
-  @ManyToMany
+  @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(name = "loan_item", joinColumns = @JoinColumn(name = "loan_id"), inverseJoinColumns = @JoinColumn(name = "book_id"))
   private Set<Book> books;
 

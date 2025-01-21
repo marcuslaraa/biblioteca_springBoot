@@ -36,6 +36,7 @@ public class BookDAO {
     entityManager.merge(book);
   }
 
+  @Transactional
   public void delete(Long id) {
     Book book = entityManager.find(Book.class, id);
     if (book != null) {

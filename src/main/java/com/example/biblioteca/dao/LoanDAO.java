@@ -19,7 +19,6 @@ public class LoanDAO {
     entityManager.persist(loan);
   }
 
-  @Transactional
   public Loan findById(Long id) {
     return entityManager.find(Loan.class, id);
   }
