@@ -25,7 +25,9 @@ public abstract class BaseController<T> {
   public CompletableFuture<ResponseEntity<?>> create(@RequestBody T entity) {
     return CompletableFuture.supplyAsync(() -> {
       try {
+        System.out.println(entity);
         createEntity(entity);
+        System.out.println(entity);
         return ResponseEntity.ok(entity);
       } catch (IllegalArgumentException e) {
         ErrorResponse errorResponse = new ErrorResponse(ErrorType.BAD_REQUEST, e.getMessage());

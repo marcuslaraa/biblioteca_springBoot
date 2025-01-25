@@ -2,6 +2,7 @@ package com.example.biblioteca.model;
 
 import jakarta.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -16,6 +17,9 @@ public class Loan {
   private String user;
 
   @Column(nullable = false)
+  private int quantity;
+
+  @Column(nullable = false)
   @Temporal(TemporalType.TIMESTAMP)
   private Date loanDate;
 
@@ -25,7 +29,7 @@ public class Loan {
 
   @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(name = "loan_item", joinColumns = @JoinColumn(name = "loan_id"), inverseJoinColumns = @JoinColumn(name = "book_id"))
-  private Set<Book> books;
+  private Set<Book> books = new HashSet<>();
 
   public Long getId() {
     return id;
@@ -41,6 +45,14 @@ public class Loan {
 
   public void setUser(String user) {
     this.user = user;
+  }
+
+  public int getQuantity() {
+    return quantity;
+  }
+
+  public void setQuantity(int quantity) {
+    this.quantity = quantity;
   }
 
   public Date getLoanDate() {

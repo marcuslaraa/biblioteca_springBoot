@@ -1,13 +1,8 @@
 package com.example.biblioteca.service;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import com.example.biblioteca.dao.BookDAO;
 import com.example.biblioteca.model.Book;
 
@@ -71,8 +66,8 @@ public class BookService {
 
   @Transactional
   public Book findBookById(Long id) {
-    Book exisBook = bookDAO.findById(id);
-    if (exisBook == null) {
+    Book existingBook = bookDAO.findById(id);
+    if (existingBook == null) {
       throw new IllegalArgumentException("Livro não encontrado");
     }
     return bookDAO.findById(id);
